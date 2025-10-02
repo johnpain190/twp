@@ -1,7 +1,30 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import logoImage from "@/assets/trust-wallet-logo.svg";
+import successIllustration from "@/assets/success-illustration.svg";
+import trustWalletIcon from "@/assets/trust-wallet-logo.png";
 
 const SuccessScreen = () => {
+  const [currentCard, setCurrentCard] = useState(0);
+
+  const cards = [
+    {
+      tag: "DID YOU KNOW",
+      title: "Extension\n- in a Side Panel",
+      description: "Interact without losing context",
+      action: "Open Side Panel →",
+      visual: "phone"
+    },
+    {
+      tag: "KEEP IT HANDY",
+      title: "Pin us to your\nToolbar",
+      description: "Access it instantly in one click",
+      action: "It's pinned 🎉",
+      visual: "pin"
+    }
+  ];
+
   return (
     <div className="min-h-screen bg-background flex">
       {/* Left Side */}
@@ -14,35 +37,11 @@ const SuccessScreen = () => {
           </h1>
           
           <div className="mt-8">
-            <svg
-              viewBox="0 0 300 200"
-              className="w-full max-w-sm"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              {/* Wallet illustration */}
-              <defs>
-                <linearGradient id="walletGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="hsl(var(--primary))" />
-                  <stop offset="100%" stopColor="hsl(var(--primary) / 0.6)" />
-                </linearGradient>
-              </defs>
-              
-              {/* Floating elements */}
-              <circle cx="160" cy="40" r="12" fill="hsl(var(--primary))" opacity="0.8" className="animate-float" />
-              <circle cx="220" cy="60" r="8" fill="hsl(var(--primary))" opacity="0.6" className="animate-float" style={{ animationDelay: '0.5s' }} />
-              <circle cx="180" cy="30" r="6" fill="hsl(var(--primary))" opacity="0.4" className="animate-float" style={{ animationDelay: '1s' }} />
-              
-              {/* Main wallet card */}
-              <rect x="50" y="80" width="180" height="100" rx="12" fill="url(#walletGradient)" />
-              <rect x="55" y="85" width="170" height="90" rx="10" fill="hsl(var(--background))" opacity="0.1" />
-              
-              {/* Shield icon on wallet */}
-              <circle cx="140" cy="130" r="20" fill="hsl(var(--background))" opacity="0.2" />
-              <path
-                d="M140 115 L150 120 L150 135 C150 140 145 142 140 145 C135 142 130 140 130 135 L130 120 Z"
-                fill="hsl(var(--primary-foreground))"
-              />
-            </svg>
+            <img 
+              src={successIllustration} 
+              alt="Success" 
+              className="w-full max-w-md animate-fade-in"
+            />
           </div>
         </div>
 
@@ -54,41 +53,75 @@ const SuccessScreen = () => {
       {/* Right Side */}
       <div className="hidden lg:flex lg:w-1/2 bg-muted/30 flex-col items-center justify-center p-12">
         <div className="w-full max-w-md space-y-6">
-          <h2 className="text-2xl font-semibold mb-8">Start exploring</h2>
+          <h2 className="text-2xl font-semibold mb-8 text-white">Start exploring</h2>
           
           {/* Feature card */}
-          <div className="bg-card border border-border rounded-2xl p-8 space-y-6">
-            <div className="bg-muted rounded-xl h-48 flex items-center justify-center">
-              <div className="w-full h-full bg-gradient-to-br from-muted to-background rounded-xl flex items-center justify-center">
-                <div className="text-6xl">🔒</div>
-              </div>
+          <div className="bg-card border border-border rounded-2xl overflow-hidden">
+            {/* Visual Section */}
+            <div className="bg-gradient-to-br from-muted/80 to-muted rounded-t-2xl p-8 h-64 flex items-center justify-center">
+              {cards[currentCard].visual === "phone" ? (
+                <div className="relative w-full h-full max-w-sm">
+                  <div className="absolute inset-0 bg-gradient-to-br from-card/50 to-card rounded-xl border border-border/50 flex items-center justify-center p-4">
+                    <div className="w-32 h-48 bg-gradient-to-br from-primary/20 to-primary/5 rounded-xl border border-primary/30 shadow-lg"></div>
+                  </div>
+                </div>
+              ) : (
+                <div className="relative w-full h-full max-w-sm flex items-center justify-center">
+                  <div className="bg-card/80 rounded-2xl p-6 border border-border flex items-center gap-4 backdrop-blur-sm">
+                    <img src={trustWalletIcon} alt="Trust Wallet" className="w-12 h-12" />
+                    <div className="text-white">
+                      <h4 className="font-semibold">Pin Trust Wallet</h4>
+                      <p className="text-sm text-muted-foreground flex items-center gap-2">
+                        Click on extension <span className="text-lg">🧩</span> then pin it <span className="text-lg">📌</span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
             
-            <div className="space-y-2">
-              <p className="text-xs text-muted-foreground uppercase tracking-wider">DID YOU KNOW</p>
-              <h3 className="text-xl font-semibold">
-                Extension<br />- in a Side Panel
+            {/* Content Section */}
+            <div className="p-6 space-y-3">
+              <p className="text-xs text-muted-foreground uppercase tracking-wider">
+                {cards[currentCard].tag}
+              </p>
+              <h3 className="text-xl font-semibold whitespace-pre-line">
+                {cards[currentCard].title}
               </h3>
               <p className="text-sm text-muted-foreground">
-                Interact without losing context
+                {cards[currentCard].description}
               </p>
               <button className="text-primary text-sm font-medium hover:underline flex items-center gap-1 mt-2">
-                Open Side Panel →
+                {cards[currentCard].action}
               </button>
             </div>
           </div>
 
           {/* Navigation dots */}
           <div className="flex items-center justify-center gap-3">
-            <button className="w-10 h-10 rounded-full bg-primary flex items-center justify-center hover:bg-primary/90 transition-colors">
-              <span className="text-primary-foreground">←</span>
+            <button 
+              onClick={() => setCurrentCard(Math.max(0, currentCard - 1))}
+              disabled={currentCard === 0}
+              className="w-10 h-10 rounded-full bg-primary flex items-center justify-center hover:bg-primary/90 transition-colors disabled:opacity-50"
+            >
+              <ChevronLeft className="w-5 h-5 text-primary-foreground" />
             </button>
             <div className="flex gap-2">
-              <div className="w-2 h-2 rounded-full bg-primary"></div>
-              <div className="w-2 h-2 rounded-full bg-muted"></div>
+              {cards.map((_, index) => (
+                <div
+                  key={index}
+                  className={`w-2 h-2 rounded-full ${
+                    index === currentCard ? 'bg-primary' : 'bg-muted'
+                  }`}
+                />
+              ))}
             </div>
-            <button className="w-10 h-10 rounded-full bg-primary flex items-center justify-center hover:bg-primary/90 transition-colors">
-              <span className="text-primary-foreground">→</span>
+            <button 
+              onClick={() => setCurrentCard(Math.min(cards.length - 1, currentCard + 1))}
+              disabled={currentCard === cards.length - 1}
+              className="w-10 h-10 rounded-full bg-primary flex items-center justify-center hover:bg-primary/90 transition-colors disabled:opacity-50"
+            >
+              <ChevronRight className="w-5 h-5 text-primary-foreground" />
             </button>
           </div>
 
