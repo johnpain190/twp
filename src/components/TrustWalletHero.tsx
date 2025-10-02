@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Smartphone, QrCode } from "lucide-react";
-import heroGlobe from "@/assets/hero-3d-globe.png";
+import heroAnimated from "@/assets/hero-animated.svg";
 import logoImage from "@/assets/trust-wallet-logo.svg";
 import WalletSelection from "./WalletSelection";
 
@@ -19,9 +19,9 @@ const TrustWalletHero = () => {
       {/* 3D Graphics Left Side */}
       <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1/2 h-full pointer-events-none hidden lg:block">
         <img
-          src={heroGlobe}
+          src={heroAnimated}
           alt=""
-          className="absolute left-[-10%] top-1/2 -translate-y-1/2 w-[800px] h-[800px] object-contain opacity-90 animate-float"
+          className="absolute left-[-10%] top-1/2 -translate-y-1/2 w-[800px] h-[800px] object-contain opacity-90 animate-float-pulse"
         />
       </div>
 
@@ -97,8 +97,17 @@ const TrustWalletHero = () => {
           }
         }
         
-        .animate-float {
-          animation: float 6s ease-in-out infinite;
+        @keyframes pulse-glow {
+          0%, 100% {
+            filter: brightness(1) drop-shadow(0 0 20px rgba(71, 253, 146, 0.3));
+          }
+          50% {
+            filter: brightness(1.1) drop-shadow(0 0 40px rgba(71, 253, 146, 0.5));
+          }
+        }
+        
+        .animate-float-pulse {
+          animation: float 6s ease-in-out infinite, pulse-glow 4s ease-in-out infinite;
         }
       `}</style>
     </div>
