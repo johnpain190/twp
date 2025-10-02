@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronLeft, X, QrCode, HelpCircle, Eye, EyeOff, Lightbulb } from "lucide-react";
+import { ChevronLeft, X, HelpCircle, Eye, EyeOff, Lightbulb } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -9,7 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import logoImage from "@/assets/trust-wallet-logo.png";
+import logoImage from "@/assets/trust-wallet-logo.svg";
 import mobileScreenshot from "@/assets/mobile-wallet-screenshot.png";
 
 interface WalletImportProps {
@@ -80,12 +80,8 @@ const WalletImport = ({ onBack, walletName = "Trust Wallet" }: WalletImportProps
   return (
     <div className="min-h-screen flex items-center justify-center px-4 lg:px-8 relative">
       {/* Logo - Top Left */}
-      <div className="absolute top-8 left-8 flex items-center gap-3">
-        <img src={logoImage} alt="Trust Wallet" className="w-8 h-8" />
-        <div className="flex items-baseline gap-1">
-          <span className="text-xl font-bold text-primary">TRUST</span>
-          <span className="text-xl font-light text-foreground">WALLET</span>
-        </div>
+      <div className="absolute top-8 left-8">
+        <img src={logoImage} alt="Trust Wallet" className="h-8 w-auto" />
       </div>
 
       {/* Step indicator and Back button */}
@@ -177,15 +173,9 @@ const WalletImport = ({ onBack, walletName = "Trust Wallet" }: WalletImportProps
 
         {/* Right Side - Import Form */}
         <div className="space-y-6">
-          <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold">
-              Import with Secret Phrase or Private Key
-            </h2>
-            <button className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors text-sm">
-              <QrCode className="w-4 h-4" />
-              <span>Import with QR Code</span>
-            </button>
-          </div>
+          <h2 className="text-2xl font-bold">
+            Import with Secret Phrase or Private Key
+          </h2>
 
           {/* Phrase Type Selector */}
           <div className="space-y-2">

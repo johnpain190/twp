@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ChevronLeft, ChevronRight, Wallet, HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import laptopImage from "@/assets/laptop-3d.png";
-import logoImage from "@/assets/trust-wallet-logo.png";
+import logoImage from "@/assets/trust-wallet-logo.svg";
 import metamaskIcon from "@/assets/metamask-icon.png";
 import phantomIcon from "@/assets/phantom-icon.png";
 import coinbaseIcon from "@/assets/coinbase-icon.png";
@@ -37,12 +37,8 @@ const WalletSelection = ({ onBack }: WalletSelectionProps) => {
   return (
     <div className="min-h-screen flex items-center justify-center px-4 lg:px-8 relative">
       {/* Logo - Top Left */}
-      <div className="absolute top-8 left-8 flex items-center gap-3">
-        <img src={logoImage} alt="Trust Wallet" className="w-8 h-8" />
-        <div className="flex items-baseline gap-1">
-          <span className="text-xl font-bold text-primary">TRUST</span>
-          <span className="text-xl font-light text-foreground">WALLET</span>
-        </div>
+      <div className="absolute top-8 left-8">
+        <img src={logoImage} alt="Trust Wallet" className="h-8 w-auto" />
       </div>
 
       {/* Step indicator and Back button - Top */}

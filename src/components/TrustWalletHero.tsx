@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Smartphone, QrCode } from "lucide-react";
 import heroGlobe from "@/assets/hero-3d-globe.png";
-import logoImage from "@/assets/trust-wallet-logo.png";
+import logoImage from "@/assets/trust-wallet-logo.svg";
 import WalletSelection from "./WalletSelection";
 
 const TrustWalletHero = () => {
@@ -28,12 +28,8 @@ const TrustWalletHero = () => {
       {/* Main Content */}
       <div className="relative z-10 w-full max-w-[500px] lg:ml-auto lg:mr-[10%]">
         {/* Logo */}
-        <div className="flex items-center gap-3 mb-12 justify-center lg:justify-start">
-          <img src={logoImage} alt="Trust Wallet" className="w-10 h-10" />
-          <div className="flex items-baseline gap-1">
-            <span className="text-2xl font-bold text-primary">TRUST</span>
-            <span className="text-2xl font-light text-foreground">WALLET</span>
-          </div>
+        <div className="flex items-center justify-center lg:justify-start mb-12">
+          <img src={logoImage} alt="Trust Wallet" className="h-8 w-auto" />
         </div>
 
         {/* Heading */}
