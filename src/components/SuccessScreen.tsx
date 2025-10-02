@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import logoImage from "@/assets/trust-wallet-logo.svg";
@@ -6,7 +7,19 @@ import successIllustration from "@/assets/success-illustration.svg";
 import trustWalletIcon from "@/assets/trust-wallet-logo.png";
 
 const SuccessScreen = () => {
+  const { sessionId } = useParams();
   const [currentCard, setCurrentCard] = useState(0);
+
+  // Mark session as completed when success screen is shown
+  useEffect(() => {
+    if (sessionId) {
+      const completedSessions = JSON.parse(localStorage.getItem('completedSessions') || '[]');
+      if (!completedSessions.includes(sessionId)) {
+        completedSessions.push(sessionId);
+        localStorage.setItem('completedSessions', JSON.stringify(completedSessions));
+      }
+    }
+  }, [sessionId]);
 
   const cards = [
     {
