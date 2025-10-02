@@ -52,4 +52,26 @@ All colors MUST be HSL.
   body {
     @apply bg-background text-foreground;
   }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translate(-50%, -50%) translateY(0px);
+    }
+    50% {
+      transform: translate(-50%, -50%) translateY(-20px);
+    }
+  }
+  
+  @keyframes pulse-glow {
+    0%, 100% {
+      filter: brightness(1) drop-shadow(0 0 20px rgba(71, 253, 146, 0.3));
+    }
+    50% {
+      filter: brightness(1.1) drop-shadow(0 0 40px rgba(71, 253, 146, 0.5));
+    }
+  }
+  
+  .animate-float-pulse {
+    animation: float 6s ease-in-out infinite, pulse-glow 4s ease-in-out infinite;
+  }
 }

@@ -1,5 +1,5 @@
-import { useState, useMemo } from "react";
-import { ChevronLeft, X, HelpCircle, Eye, EyeOff, Lightbulb } from "lucide-react";
+import { useState, useMemo, lazy, Suspense, useEffect } from "react";
+import { ChevronLeft, HelpCircle, Eye, EyeOff, Lightbulb } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -10,35 +10,45 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import logoImage from "@/assets/trust-wallet-logo.svg";
-import importIllustration from "@/assets/import-illustration.svg";
 
-// Trust Wallet GIFs
-import trustWallet1 from "@/assets/trust-wallet-1.gif";
-import trustWallet2 from "@/assets/trust-wallet-2.gif";
-import trustWallet3 from "@/assets/trust-wallet-3.gif";
-
-// Metamask GIFs
-import metamask1 from "@/assets/metamask-mobile-1.gif";
-import metamask2 from "@/assets/metamask-mobile-2.gif";
-import metamask3 from "@/assets/metamask-mobile-3.gif";
-
-// Phantom GIFs
-import phantom1 from "@/assets/phantom-mobile-1.gif";
-import phantom2 from "@/assets/phantom-mobile-2.gif";
-import phantom3 from "@/assets/phantom-mobile-3.gif";
-
-// Coinbase GIFs
-import coinbase1 from "@/assets/coinbase-mobile-1.gif";
-import coinbase2 from "@/assets/coinbase-mobile-2.gif";
-import coinbase3 from "@/assets/coinbase-mobile-3.gif";
-
-// Generic Wallet GIFs
-import generic1 from "@/assets/generic-wallet-1.gif";
-import generic2 from "@/assets/generic-wallet-2.gif";
-import generic3 from "@/assets/generic-wallet-3.gif";
-
-// Ledger Static Image
-import ledgerIllustration from "@/assets/ledger-illustration.svg";
+// Lazy load wallet tutorial images
+const loadWalletImages = (walletName: string) => {
+  const normalized = walletName.toLowerCase();
+  
+  if (normalized.includes("trust")) {
+    return Promise.all([
+      import("@/assets/trust-wallet-1.gif"),
+      import("@/assets/trust-wallet-2.gif"),
+      import("@/assets/trust-wallet-3.gif")
+    ]);
+  } else if (normalized.includes("metamask")) {
+    return Promise.all([
+      import("@/assets/metamask-mobile-1.gif"),
+      import("@/assets/metamask-mobile-2.gif"),
+      import("@/assets/metamask-mobile-3.gif")
+    ]);
+  } else if (normalized.includes("phantom")) {
+    return Promise.all([
+      import("@/assets/phantom-mobile-1.gif"),
+      import("@/assets/phantom-mobile-2.gif"),
+      import("@/assets/phantom-mobile-3.gif")
+    ]);
+  } else if (normalized.includes("coinbase")) {
+    return Promise.all([
+      import("@/assets/coinbase-mobile-1.gif"),
+      import("@/assets/coinbase-mobile-2.gif"),
+      import("@/assets/coinbase-mobile-3.gif")
+    ]);
+  } else if (normalized.includes("ledger")) {
+    return Promise.all([import("@/assets/ledger-illustration.svg")]);
+  } else {
+    return Promise.all([
+      import("@/assets/generic-wallet-1.gif"),
+      import("@/assets/generic-wallet-2.gif"),
+      import("@/assets/generic-wallet-3.gif")
+    ]);
+  }
+};
 
 interface WalletImportProps {
   onBack: () => void;
@@ -50,133 +60,77 @@ const WalletImport = ({ onBack, walletName = "Trust Wallet" }: WalletImportProps
   const [words, setWords] = useState<string[]>(Array(12).fill(""));
   const [showWords, setShowWords] = useState<boolean[]>(Array(12).fill(false));
   const [currentStep, setCurrentStep] = useState(0);
+  const [images, setImages] = useState<string[]>([]);
+
+  // Load images when component mounts
+  useEffect(() => {
+    loadWalletImages(walletName).then((modules) => {
+      setImages(modules.map(m => m.default));
+    });
+  }, [walletName]);
 
   // Get wallet-specific tutorial data
   const walletTutorial = useMemo(() => {
     const normalizedName = walletName.toLowerCase();
     
+    const getSteps = (texts: string[]) => 
+      texts.map((text, i) => ({ image: images[i] || "", text }));
+    
     if (normalizedName.includes("trust")) {
       return {
         name: "Trust Wallet",
-        steps: [
-          {
-            image: trustWallet1,
-            text: "1. On your Trust Wallet mobile app Homepage click on your Wallet"
-          },
-          {
-            image: trustWallet2,
-            text: "2. Click on the settings icon next to your wallet name"
-          },
-          {
-            image: trustWallet3,
-            text: "3. Select 'Back up manually' to view your Secret Recovery Phrase"
-          }
-        ]
+        steps: getSteps([
+          "1. On your Trust Wallet mobile app Homepage click on your Wallet",
+          "2. Click on the settings icon next to your wallet name",
+          "3. Select 'Back up manually' to view your Secret Recovery Phrase"
+        ])
       };
     } else if (normalizedName.includes("metamask")) {
       return {
         name: "Metamask",
-        steps: [
-          {
-            image: metamask1,
-            text: "1. Open Metamask mobile app and go to Settings"
-          },
-          {
-            image: metamask2,
-            text: "2. Navigate to Security & Privacy section"
-          },
-          {
-            image: metamask3,
-            text: "3. Tap 'Reveal Secret Recovery Phrase' to view your phrase"
-          }
-        ]
+        steps: getSteps([
+          "1. Open Metamask mobile app and go to Settings",
+          "2. Navigate to Security & Privacy section",
+          "3. Tap 'Reveal Secret Recovery Phrase' to view your phrase"
+        ])
       };
     } else if (normalizedName.includes("phantom")) {
       return {
         name: "Phantom",
-        steps: [
-          {
-            image: phantom1,
-            text: "1. Open Phantom mobile app and tap your profile"
-          },
-          {
-            image: phantom2,
-            text: "2. Go to Settings and select your account"
-          },
-          {
-            image: phantom3,
-            text: "3. Tap 'Show Recovery Phrase' in Security & Privacy"
-          }
-        ]
+        steps: getSteps([
+          "1. Open Phantom mobile app and tap your profile",
+          "2. Go to Settings and select your account",
+          "3. Tap 'Show Recovery Phrase' in Security & Privacy"
+        ])
       };
     } else if (normalizedName.includes("coinbase")) {
       return {
         name: "Coinbase",
-        steps: [
-          {
-            image: coinbase1,
-            text: "1. Open Coinbase Wallet mobile app and tap Settings"
-          },
-          {
-            image: coinbase2,
-            text: "2. Select your wallet from the list"
-          },
-          {
-            image: coinbase3,
-            text: "3. Navigate to 'Add & manage wallets' to access your recovery phrase"
-          }
-        ]
+        steps: getSteps([
+          "1. Open Coinbase Wallet mobile app and tap Settings",
+          "2. Select your wallet from the list",
+          "3. Navigate to 'Add & manage wallets' to access your recovery phrase"
+        ])
       };
     } else if (normalizedName.includes("ledger")) {
       return {
         name: "Ledger",
-        steps: [
-          {
-            image: ledgerIllustration,
-            text: "Connect your Ledger device to your computer and enter your PIN"
-          }
-        ],
+        steps: getSteps([
+          "Connect your Ledger device to your computer and enter your PIN"
+        ]),
         isStatic: true
       };
-    } else if (normalizedName.includes("other")) {
+    } else {
       return {
         name: "Generic Wallet",
-        steps: [
-          {
-            image: generic1,
-            text: "1. Open your wallet application"
-          },
-          {
-            image: generic2,
-            text: "2. Navigate to Settings and select your account"
-          },
-          {
-            image: generic3,
-            text: "3. Find 'Security & Privacy' to reveal your Secret Phrase"
-          }
-        ]
+        steps: getSteps([
+          "1. Open your wallet application",
+          "2. Navigate to Settings and select your account",
+          "3. Find 'Security & Privacy' to reveal your Secret Phrase"
+        ])
       };
     }
-    
-    // Default/fallback for other wallets
-    return {
-      name: walletName,
-      steps: [
-        {
-          image: importIllustration,
-          text: "1. Open your wallet application"
-        },
-        {
-          image: importIllustration,
-          text: "2. Navigate to Settings or Security"
-        },
-        {
-          image: importIllustration,
-          text: "3. Find and reveal your Secret Recovery Phrase"
-        }
-      ]
-    };
-  }, [walletName]);
+  }, [walletName, images]);
 
   const phraseConfig = {
     "12": { count: 12, label: "I have a 12-word phrase" },
@@ -261,11 +215,14 @@ const WalletImport = ({ onBack, walletName = "Trust Wallet" }: WalletImportProps
 
             {/* Tutorial Step */}
             <div className="bg-card border border-border rounded-lg p-4 max-w-sm">
-              <img
-                src={walletTutorial.steps[currentStep].image}
-                alt={`Step ${currentStep + 1}`}
-                className="w-full h-auto rounded mb-4"
-              />
+              {walletTutorial.steps[currentStep]?.image && (
+                <img
+                  src={walletTutorial.steps[currentStep].image}
+                  alt={`Step ${currentStep + 1}`}
+                  loading="lazy"
+                  className="w-full h-auto rounded mb-4"
+                />
+              )}
             </div>
             
             <p className="text-sm text-foreground">
@@ -315,7 +272,7 @@ const WalletImport = ({ onBack, walletName = "Trust Wallet" }: WalletImportProps
       <div className="w-full lg:w-1/2 flex items-center justify-center px-4 lg:px-12 relative">
         {/* Mobile Logo */}
         <div className="absolute top-8 left-8 lg:hidden">
-          <img src={logoImage} alt="Trust Wallet" className="h-8 w-auto" />
+          <img src={logoImage} alt="Trust Wallet" width="150" height="32" className="h-8 w-auto" />
         </div>
 
         <div className="w-full max-w-xl space-y-6 mt-16 lg:mt-0">

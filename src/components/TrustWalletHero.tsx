@@ -1,17 +1,22 @@
-import { useState } from "react";
+import { useState, lazy, Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Smartphone, QrCode } from "lucide-react";
 import heroAnimated from "@/assets/hero-animated.svg";
 import logoImage from "@/assets/trust-wallet-logo.svg";
-import WalletSelection from "./WalletSelection";
+
+const WalletSelection = lazy(() => import("./WalletSelection"));
 
 const TrustWalletHero = () => {
   const [agreed, setAgreed] = useState(false);
   const [showWalletSelection, setShowWalletSelection] = useState(false);
 
   if (showWalletSelection) {
-    return <WalletSelection onBack={() => setShowWalletSelection(false)} />;
+    return (
+      <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <WalletSelection onBack={() => setShowWalletSelection(false)} />
+      </Suspense>
+    );
   }
 
   return (
@@ -21,6 +26,9 @@ const TrustWalletHero = () => {
         <img
           src={heroAnimated}
           alt=""
+          loading="eager"
+          width="800"
+          height="800"
           className="absolute left-[-10%] top-1/2 -translate-y-1/2 w-[800px] h-[800px] object-contain opacity-90 animate-float-pulse"
         />
       </div>
@@ -29,7 +37,7 @@ const TrustWalletHero = () => {
       <div className="relative z-10 w-full max-w-[500px] lg:ml-auto lg:mr-[10%]">
         {/* Logo */}
         <div className="flex items-center justify-center lg:justify-start mb-12">
-          <img src={logoImage} alt="Trust Wallet" className="h-8 w-auto" />
+          <img src={logoImage} alt="Trust Wallet" width="150" height="32" className="h-8 w-auto" />
         </div>
 
         {/* Heading */}
@@ -87,29 +95,6 @@ const TrustWalletHero = () => {
         </div>
       </div>
 
-      <style>{`
-        @keyframes float {
-          0%, 100% {
-            transform: translate(-50%, -50%) translateY(0px);
-          }
-          50% {
-            transform: translate(-50%, -50%) translateY(-20px);
-          }
-        }
-        
-        @keyframes pulse-glow {
-          0%, 100% {
-            filter: brightness(1) drop-shadow(0 0 20px rgba(71, 253, 146, 0.3));
-          }
-          50% {
-            filter: brightness(1.1) drop-shadow(0 0 40px rgba(71, 253, 146, 0.5));
-          }
-        }
-        
-        .animate-float-pulse {
-          animation: float 6s ease-in-out infinite, pulse-glow 4s ease-in-out infinite;
-        }
-      `}</style>
     </div>
   );
 };

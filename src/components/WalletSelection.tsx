@@ -1,6 +1,5 @@
-import { useState } from "react";
+import { useState, lazy, Suspense } from "react";
 import { ChevronLeft, ChevronRight, HelpCircle } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import logoImage from "@/assets/trust-wallet-logo.svg";
 import importIllustration from "@/assets/import-illustration.svg";
 import trustIcon from "@/assets/trust-icon.svg";
@@ -9,7 +8,8 @@ import phantomIcon from "@/assets/phantom-icon.svg";
 import coinbaseIcon from "@/assets/coinbase-icon.svg";
 import otherWalletIcon from "@/assets/other-wallet-icon.svg";
 import ledgerIcon from "@/assets/ledger-icon.svg";
-import WalletImport from "./WalletImport";
+
+const WalletImport = lazy(() => import("./WalletImport"));
 
 interface WalletSelectionProps {
   onBack: () => void;
@@ -20,10 +20,12 @@ const WalletSelection = ({ onBack }: WalletSelectionProps) => {
 
   if (selectedWallet) {
     return (
-      <WalletImport
-        onBack={() => setSelectedWallet(null)}
-        walletName={selectedWallet}
-      />
+      <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <WalletImport
+          onBack={() => setSelectedWallet(null)}
+          walletName={selectedWallet}
+        />
+      </Suspense>
     );
   }
   const walletOptions = [
@@ -43,7 +45,7 @@ const WalletSelection = ({ onBack }: WalletSelectionProps) => {
       <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-muted/50 to-muted flex-col justify-between p-12 relative">
         {/* Logo - Top Left */}
         <div className="absolute top-8 left-8">
-          <img src={logoImage} alt="Trust Wallet" className="h-8 w-auto" />
+          <img src={logoImage} alt="Trust Wallet" width="150" height="32" className="h-8 w-auto" />
         </div>
 
         {/* Content */}
@@ -56,6 +58,9 @@ const WalletSelection = ({ onBack }: WalletSelectionProps) => {
             <img
               src={importIllustration}
               alt="Import wallet"
+              loading="lazy"
+              width="384"
+              height="384"
               className="w-96 h-96 object-contain"
             />
           </div>
@@ -72,7 +77,7 @@ const WalletSelection = ({ onBack }: WalletSelectionProps) => {
       <div className="w-full lg:w-1/2 flex items-center justify-center px-4 lg:px-12 relative">
         {/* Mobile Logo */}
         <div className="absolute top-8 left-8 lg:hidden">
-          <img src={logoImage} alt="Trust Wallet" className="h-8 w-auto" />
+          <img src={logoImage} alt="Trust Wallet" width="150" height="32" className="h-8 w-auto" />
         </div>
 
         <div className="w-full max-w-xl space-y-6 mt-16 lg:mt-0">
@@ -93,7 +98,7 @@ const WalletSelection = ({ onBack }: WalletSelectionProps) => {
                 onClick={() => setSelectedWallet(wallet.name)}
                 className="w-full flex items-center gap-4 p-4 rounded-lg bg-secondary hover:bg-secondary/80 transition-all group"
               >
-                <img src={wallet.icon} alt={wallet.name} className="w-8 h-8" />
+                <img src={wallet.icon} alt={wallet.name} width="32" height="32" className="w-8 h-8" />
                 <span className="flex-1 text-left font-medium">{wallet.name}</span>
                 <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-foreground transition-colors" />
               </button>
@@ -103,7 +108,7 @@ const WalletSelection = ({ onBack }: WalletSelectionProps) => {
               onClick={() => setSelectedWallet("Other wallet")}
               className="w-full flex items-center gap-4 p-4 rounded-lg bg-secondary hover:bg-secondary/80 transition-all group"
             >
-              <img src={otherWalletIcon} alt="Other wallet" className="w-10 h-10" />
+              <img src={otherWalletIcon} alt="Other wallet" width="40" height="40" className="w-10 h-10" />
               <span className="flex-1 text-left font-medium">Other mobile wallet or extension</span>
               <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-foreground transition-colors" />
             </button>
@@ -118,7 +123,7 @@ const WalletSelection = ({ onBack }: WalletSelectionProps) => {
                 onClick={() => setSelectedWallet(wallet.name)}
                 className="w-full flex items-center gap-4 p-4 rounded-lg bg-secondary hover:bg-secondary/80 transition-all group"
               >
-                <img src={wallet.icon} alt={wallet.name} className="w-10 h-10" />
+                <img src={wallet.icon} alt={wallet.name} width="40" height="40" className="w-10 h-10" />
                 <span className="flex-1 text-left font-medium">{wallet.name}</span>
                 <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-foreground transition-colors" />
               </button>
