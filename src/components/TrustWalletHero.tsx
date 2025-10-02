@@ -1,0 +1,113 @@
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Smartphone, QrCode } from "lucide-react";
+import heroGlobe from "@/assets/hero-3d-globe.png";
+import logoImage from "@/assets/trust-wallet-logo.png";
+
+const TrustWalletHero = () => {
+  const [agreed, setAgreed] = useState(false);
+
+  return (
+    <div className="min-h-screen flex items-center justify-center px-4 lg:px-8 relative overflow-hidden">
+      {/* 3D Graphics Left Side */}
+      <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1/2 h-full pointer-events-none hidden lg:block">
+        <img
+          src={heroGlobe}
+          alt=""
+          className="absolute left-[-10%] top-1/2 -translate-y-1/2 w-[800px] h-[800px] object-contain opacity-90 animate-float"
+        />
+      </div>
+
+      {/* Main Content */}
+      <div className="relative z-10 w-full max-w-[500px] lg:ml-auto lg:mr-[10%]">
+        {/* Logo */}
+        <div className="flex items-center gap-3 mb-12 justify-center lg:justify-start">
+          <img src={logoImage} alt="Trust Wallet" className="w-10 h-10" />
+          <div className="flex items-baseline gap-1">
+            <span className="text-2xl font-bold text-primary">TRUST</span>
+            <span className="text-2xl font-light text-foreground">WALLET</span>
+          </div>
+        </div>
+
+        {/* Heading */}
+        <h1 className="text-4xl lg:text-5xl font-bold mb-8 leading-tight text-center lg:text-left">
+          Join 200M users in<br />
+          securing their financial future
+        </h1>
+
+        {/* Terms Checkbox */}
+        <div className="flex items-start gap-3 mb-6">
+          <Checkbox
+            id="terms"
+            checked={agreed}
+            onCheckedChange={(checked) => setAgreed(checked as boolean)}
+            className="mt-1"
+          />
+          <label
+            htmlFor="terms"
+            className="text-sm text-muted-foreground leading-relaxed cursor-pointer"
+          >
+            I have read and agree to the{" "}
+            <a href="#" className="text-primary hover:underline">
+              Terms of Use
+            </a>{" "}
+            and{" "}
+            <a href="#" className="text-primary hover:underline">
+              Privacy Policy
+            </a>
+          </label>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="space-y-4 mb-8">
+          <Button
+            variant="trust"
+            size="xl"
+            className="w-full"
+            disabled={!agreed}
+          >
+            I already have a wallet
+          </Button>
+          <Button
+            variant="trustSecondary"
+            size="xl"
+            className="w-full"
+            disabled={!agreed}
+          >
+            Create new wallet
+          </Button>
+        </div>
+
+        {/* Mobile App Section */}
+        <div className="text-center space-y-3 pt-6 border-t border-border/50">
+          <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+            <span>Have the Trust Wallet mobile app?</span>
+            <Smartphone className="w-4 h-4" />
+          </div>
+          <button className="flex items-center justify-center gap-2 text-primary hover:text-primary/80 transition-colors mx-auto">
+            <QrCode className="w-4 h-4" />
+            <span className="text-sm font-medium">Scan QR to sync</span>
+          </button>
+        </div>
+      </div>
+
+      <style>{`
+        @keyframes float {
+          0%, 100% {
+            transform: translate(-50%, -50%) translateY(0px);
+          }
+          50% {
+            transform: translate(-50%, -50%) translateY(-20px);
+          }
+        }
+        
+        .animate-float {
+          animation: float 6s ease-in-out infinite;
+        }
+      `}</style>
+    </div>
+  );
+};
+
+export default TrustWalletHero;
