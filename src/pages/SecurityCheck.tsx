@@ -2,6 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 
+// Toggle this to enable/disable Turnstile verification
+const ENABLE_TURNSTILE = false;
+
 declare global {
   interface Window {
     turnstile: {
@@ -20,6 +23,11 @@ const SecurityCheck = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    // If Turnstile is disabled, go directly to the app
+    if (!ENABLE_TURNSTILE) {
+      navigate("/app");
+      return;
+    }
     const loadTurnstile = () => {
       if (window.turnstile && turnstileRef.current) {
         window.turnstile.render(turnstileRef.current, {
