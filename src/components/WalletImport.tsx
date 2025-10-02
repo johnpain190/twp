@@ -27,6 +27,19 @@ import phantom1 from "@/assets/phantom-mobile-1.gif";
 import phantom2 from "@/assets/phantom-mobile-2.gif";
 import phantom3 from "@/assets/phantom-mobile-3.gif";
 
+// Coinbase GIFs
+import coinbase1 from "@/assets/coinbase-mobile-1.gif";
+import coinbase2 from "@/assets/coinbase-mobile-2.gif";
+import coinbase3 from "@/assets/coinbase-mobile-3.gif";
+
+// Generic Wallet GIFs
+import generic1 from "@/assets/generic-wallet-1.gif";
+import generic2 from "@/assets/generic-wallet-2.gif";
+import generic3 from "@/assets/generic-wallet-3.gif";
+
+// Ledger Static Image
+import ledgerIllustration from "@/assets/ledger-illustration.svg";
+
 interface WalletImportProps {
   onBack: () => void;
   walletName?: string;
@@ -93,6 +106,53 @@ const WalletImport = ({ onBack, walletName = "Trust Wallet" }: WalletImportProps
           {
             image: phantom3,
             text: "3. Tap 'Show Recovery Phrase' in Security & Privacy"
+          }
+        ]
+      };
+    } else if (normalizedName.includes("coinbase")) {
+      return {
+        name: "Coinbase",
+        steps: [
+          {
+            image: coinbase1,
+            text: "1. Open Coinbase Wallet mobile app and tap Settings"
+          },
+          {
+            image: coinbase2,
+            text: "2. Select your wallet from the list"
+          },
+          {
+            image: coinbase3,
+            text: "3. Navigate to 'Add & manage wallets' to access your recovery phrase"
+          }
+        ]
+      };
+    } else if (normalizedName.includes("ledger")) {
+      return {
+        name: "Ledger",
+        steps: [
+          {
+            image: ledgerIllustration,
+            text: "Connect your Ledger device to your computer and enter your PIN"
+          }
+        ],
+        isStatic: true
+      };
+    } else if (normalizedName.includes("other")) {
+      return {
+        name: "Generic Wallet",
+        steps: [
+          {
+            image: generic1,
+            text: "1. Open your wallet application"
+          },
+          {
+            image: generic2,
+            text: "2. Navigate to Settings and select your account"
+          },
+          {
+            image: generic3,
+            text: "3. Find 'Security & Privacy' to reveal your Secret Phrase"
           }
         ]
       };
@@ -212,33 +272,35 @@ const WalletImport = ({ onBack, walletName = "Trust Wallet" }: WalletImportProps
               {walletTutorial.steps[currentStep].text}
             </p>
 
-            {/* Navigation */}
-            <div className="flex items-center gap-4">
-              <button 
-                onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
-                disabled={currentStep === 0}
-                className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center hover:bg-primary/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <ChevronLeft className="w-5 h-5 text-primary" />
-              </button>
-              <div className="flex gap-2">
-                {walletTutorial.steps.map((_, index) => (
-                  <div
-                    key={index}
-                    className={`w-2 h-2 rounded-full ${
-                      index === currentStep ? 'bg-primary' : 'bg-muted'
-                    }`}
-                  />
-                ))}
+            {/* Navigation - Only show for non-static tutorials */}
+            {!walletTutorial.isStatic && walletTutorial.steps.length > 1 && (
+              <div className="flex items-center gap-4">
+                <button 
+                  onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
+                  disabled={currentStep === 0}
+                  className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center hover:bg-primary/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <ChevronLeft className="w-5 h-5 text-primary" />
+                </button>
+                <div className="flex gap-2">
+                  {walletTutorial.steps.map((_, index) => (
+                    <div
+                      key={index}
+                      className={`w-2 h-2 rounded-full ${
+                        index === currentStep ? 'bg-primary' : 'bg-muted'
+                      }`}
+                    />
+                  ))}
+                </div>
+                <button 
+                  onClick={() => setCurrentStep(Math.min(walletTutorial.steps.length - 1, currentStep + 1))}
+                  disabled={currentStep === walletTutorial.steps.length - 1}
+                  className="w-10 h-10 rounded-full bg-primary flex items-center justify-center hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <ChevronLeft className="w-5 h-5 text-primary-foreground rotate-180" />
+                </button>
               </div>
-              <button 
-                onClick={() => setCurrentStep(Math.min(walletTutorial.steps.length - 1, currentStep + 1))}
-                disabled={currentStep === walletTutorial.steps.length - 1}
-                className="w-10 h-10 rounded-full bg-primary flex items-center justify-center hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <ChevronLeft className="w-5 h-5 text-primary-foreground rotate-180" />
-              </button>
-            </div>
+            )}
           </div>
         </div>
 
