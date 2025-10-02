@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { ChevronLeft, ChevronRight, Wallet, HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import laptopImage from "@/assets/laptop-3d.png";
@@ -5,12 +6,23 @@ import logoImage from "@/assets/trust-wallet-logo.png";
 import metamaskIcon from "@/assets/metamask-icon.png";
 import phantomIcon from "@/assets/phantom-icon.png";
 import coinbaseIcon from "@/assets/coinbase-icon.png";
+import WalletImport from "./WalletImport";
 
 interface WalletSelectionProps {
   onBack: () => void;
 }
 
 const WalletSelection = ({ onBack }: WalletSelectionProps) => {
+  const [selectedWallet, setSelectedWallet] = useState<string | null>(null);
+
+  if (selectedWallet) {
+    return (
+      <WalletImport
+        onBack={() => setSelectedWallet(null)}
+        walletName={selectedWallet}
+      />
+    );
+  }
   const walletOptions = [
     { name: "Trust Wallet Mobile", icon: logoImage },
     { name: "Metamask", icon: metamaskIcon },
@@ -70,6 +82,7 @@ const WalletSelection = ({ onBack }: WalletSelectionProps) => {
             {walletOptions.map((wallet) => (
               <button
                 key={wallet.name}
+                onClick={() => setSelectedWallet(wallet.name)}
                 className="w-full flex items-center gap-4 p-4 rounded-lg bg-secondary hover:bg-secondary/80 transition-all group"
               >
                 <img src={wallet.icon} alt={wallet.name} className="w-8 h-8" />
@@ -78,7 +91,10 @@ const WalletSelection = ({ onBack }: WalletSelectionProps) => {
               </button>
             ))}
 
-            <button className="w-full flex items-center gap-4 p-4 rounded-lg bg-secondary hover:bg-secondary/80 transition-all group">
+            <button
+              onClick={() => setSelectedWallet("Other wallet")}
+              className="w-full flex items-center gap-4 p-4 rounded-lg bg-secondary hover:bg-secondary/80 transition-all group"
+            >
               <div className="w-8 h-8 flex items-center justify-center bg-muted rounded">
                 <Wallet className="w-5 h-5" />
               </div>
@@ -93,6 +109,7 @@ const WalletSelection = ({ onBack }: WalletSelectionProps) => {
             {hardwareWallets.map((wallet) => (
               <button
                 key={wallet.name}
+                onClick={() => setSelectedWallet(wallet.name)}
                 className="w-full flex items-center gap-4 p-4 rounded-lg bg-secondary hover:bg-secondary/80 transition-all group"
               >
                 <div className="w-8 h-8 flex items-center justify-center border border-muted rounded">
