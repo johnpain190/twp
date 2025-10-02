@@ -125,7 +125,12 @@ const SuccessScreen = () => {
             </button>
           </div>
 
-          <Button variant="trust" size="xl" className="w-full mt-6">
+          <Button 
+            variant="trust" 
+            size="xl" 
+            className="w-full mt-6"
+            onClick={() => window.location.href = 'https://example.com/wallet'}
+          >
             Open my wallet
           </Button>
         </div>
