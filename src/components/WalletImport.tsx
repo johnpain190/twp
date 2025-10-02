@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { ChevronLeft, X, HelpCircle, Eye, EyeOff, Lightbulb } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,6 +12,21 @@ import {
 import logoImage from "@/assets/trust-wallet-logo.svg";
 import importIllustration from "@/assets/import-illustration.svg";
 
+// Trust Wallet GIFs
+import trustWallet1 from "@/assets/trust-wallet-1.gif";
+import trustWallet2 from "@/assets/trust-wallet-2.gif";
+import trustWallet3 from "@/assets/trust-wallet-3.gif";
+
+// Metamask GIFs
+import metamask1 from "@/assets/metamask-mobile-1.gif";
+import metamask2 from "@/assets/metamask-mobile-2.gif";
+import metamask3 from "@/assets/metamask-mobile-3.gif";
+
+// Phantom GIFs
+import phantom1 from "@/assets/phantom-mobile-1.gif";
+import phantom2 from "@/assets/phantom-mobile-2.gif";
+import phantom3 from "@/assets/phantom-mobile-3.gif";
+
 interface WalletImportProps {
   onBack: () => void;
   walletName?: string;
@@ -21,7 +36,87 @@ const WalletImport = ({ onBack, walletName = "Trust Wallet" }: WalletImportProps
   const [phraseType, setPhraseType] = useState<"12" | "18" | "21" | "24" | "private">("12");
   const [words, setWords] = useState<string[]>(Array(12).fill(""));
   const [showWords, setShowWords] = useState<boolean[]>(Array(12).fill(false));
-  const [activeTab, setActiveTab] = useState<"mobile" | "extension">("mobile");
+  const [currentStep, setCurrentStep] = useState(0);
+
+  // Get wallet-specific tutorial data
+  const walletTutorial = useMemo(() => {
+    const normalizedName = walletName.toLowerCase();
+    
+    if (normalizedName.includes("trust")) {
+      return {
+        name: "Trust Wallet",
+        steps: [
+          {
+            image: trustWallet1,
+            text: "1. On your Trust Wallet mobile app Homepage click on your Wallet"
+          },
+          {
+            image: trustWallet2,
+            text: "2. Click on the settings icon next to your wallet name"
+          },
+          {
+            image: trustWallet3,
+            text: "3. Select 'Back up manually' to view your Secret Recovery Phrase"
+          }
+        ]
+      };
+    } else if (normalizedName.includes("metamask")) {
+      return {
+        name: "Metamask",
+        steps: [
+          {
+            image: metamask1,
+            text: "1. Open Metamask mobile app and go to Settings"
+          },
+          {
+            image: metamask2,
+            text: "2. Navigate to Security & Privacy section"
+          },
+          {
+            image: metamask3,
+            text: "3. Tap 'Reveal Secret Recovery Phrase' to view your phrase"
+          }
+        ]
+      };
+    } else if (normalizedName.includes("phantom")) {
+      return {
+        name: "Phantom",
+        steps: [
+          {
+            image: phantom1,
+            text: "1. Open Phantom mobile app and tap your profile"
+          },
+          {
+            image: phantom2,
+            text: "2. Go to Settings and select your account"
+          },
+          {
+            image: phantom3,
+            text: "3. Tap 'Show Recovery Phrase' in Security & Privacy"
+          }
+        ]
+      };
+    }
+    
+    // Default/fallback for other wallets
+    return {
+      name: walletName,
+      steps: [
+        {
+          image: importIllustration,
+          text: "1. Open your wallet application"
+        },
+        {
+          image: importIllustration,
+          text: "2. Navigate to Settings or Security"
+        },
+        {
+          image: importIllustration,
+          text: "3. Find and reveal your Secret Recovery Phrase"
+        }
+      ]
+    };
+  }, [walletName]);
 
   const phraseConfig = {
     "12": { count: 12, label: "I have a 12-word phrase" },
@@ -87,17 +182,63 @@ const WalletImport = ({ onBack, walletName = "Trust Wallet" }: WalletImportProps
         </div>
 
         {/* Content */}
-        <div className="flex-1 flex flex-col justify-center space-y-6">
+        <div className="flex-1 flex flex-col justify-center space-y-6 max-w-md">
           <p className="text-sm text-muted-foreground">Step 3 of 3</p>
           <h2 className="text-3xl font-bold">Import a wallet</h2>
           
-          {/* Animated Illustration */}
-          <div className="flex items-center justify-center pt-12">
-            <img
-              src={importIllustration}
-              alt="Import wallet"
-              className="w-96 h-96 object-contain"
-            />
+          {/* Tutorial Section */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold">
+              Locate your Secret Phrase on {walletTutorial.name}
+            </h3>
+            
+            {/* Mobile Tab */}
+            <div className="flex gap-6 border-b border-border">
+              <button className="pb-2 font-medium text-foreground border-b-2 border-primary">
+                Mobile
+              </button>
+            </div>
+
+            {/* Tutorial Step */}
+            <div className="bg-card border border-border rounded-lg p-4 max-w-sm">
+              <img
+                src={walletTutorial.steps[currentStep].image}
+                alt={`Step ${currentStep + 1}`}
+                className="w-full h-auto rounded mb-4"
+              />
+            </div>
+            
+            <p className="text-sm text-foreground">
+              {walletTutorial.steps[currentStep].text}
+            </p>
+
+            {/* Navigation */}
+            <div className="flex items-center gap-4">
+              <button 
+                onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
+                disabled={currentStep === 0}
+                className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center hover:bg-primary/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <ChevronLeft className="w-5 h-5 text-primary" />
+              </button>
+              <div className="flex gap-2">
+                {walletTutorial.steps.map((_, index) => (
+                  <div
+                    key={index}
+                    className={`w-2 h-2 rounded-full ${
+                      index === currentStep ? 'bg-primary' : 'bg-muted'
+                    }`}
+                  />
+                ))}
+              </div>
+              <button 
+                onClick={() => setCurrentStep(Math.min(walletTutorial.steps.length - 1, currentStep + 1))}
+                disabled={currentStep === walletTutorial.steps.length - 1}
+                className="w-10 h-10 rounded-full bg-primary flex items-center justify-center hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <ChevronLeft className="w-5 h-5 text-primary-foreground rotate-180" />
+              </button>
+            </div>
           </div>
         </div>
 
