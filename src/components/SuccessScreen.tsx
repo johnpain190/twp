@@ -54,10 +54,6 @@ const SuccessScreen = () => {
             Open my wallet
           </Button>
         </div>
-
-        <button className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors self-start mt-auto mx-auto lg:mx-0">
-          <span className="text-sm">Help</span>
-        </button>
       </div>
 
       {/* Right Side */}
