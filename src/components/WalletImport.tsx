@@ -78,28 +78,44 @@ const WalletImport = ({ onBack, walletName = "Trust Wallet" }: WalletImportProps
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 lg:px-8 relative">
-      {/* Logo - Top Left */}
-      <div className="absolute top-8 left-8">
-        <img src={logoImage} alt="Trust Wallet" className="h-8 w-auto" />
-      </div>
+    <div className="min-h-screen flex relative">
+      {/* Left Side - Grey Gradient with Illustration */}
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-muted/50 to-muted flex-col justify-between p-12 relative">
+        {/* Logo - Top Left */}
+        <div className="absolute top-8 left-8">
+          <img src={logoImage} alt="Trust Wallet" className="h-8 w-auto" />
+        </div>
 
-      <div className="w-full max-w-6xl grid lg:grid-cols-2 gap-12 items-start mt-16 lg:mt-0">
-        {/* Left Side - Illustration */}
-        <div className="hidden lg:flex flex-col items-start justify-start space-y-6">
+        {/* Content */}
+        <div className="flex-1 flex flex-col justify-center space-y-6">
           <p className="text-sm text-muted-foreground">Step 3 of 3</p>
           <h2 className="text-3xl font-bold">Import a wallet</h2>
-          <div className="flex items-center justify-center w-full pt-8">
+          
+          {/* Animated Illustration */}
+          <div className="flex items-center justify-center pt-12">
             <img
               src={importIllustration}
               alt="Import wallet"
-              className="w-80 h-80 object-contain"
+              className="w-96 h-96 object-contain"
             />
           </div>
         </div>
 
-        {/* Right Side - Import Form */}
-        <div className="space-y-6">
+        {/* Help Button - Bottom Left */}
+        <button className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors self-start">
+          <HelpCircle className="w-5 h-5" />
+          <span className="text-sm">Help</span>
+        </button>
+      </div>
+
+      {/* Right Side - Import Form */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center px-4 lg:px-12 relative">
+        {/* Mobile Logo */}
+        <div className="absolute top-8 left-8 lg:hidden">
+          <img src={logoImage} alt="Trust Wallet" className="h-8 w-auto" />
+        </div>
+
+        <div className="w-full max-w-xl space-y-6 mt-16 lg:mt-0">
           <button
             onClick={onBack}
             className="flex items-center gap-2 text-foreground hover:text-primary transition-colors mb-6"
@@ -187,12 +203,6 @@ const WalletImport = ({ onBack, walletName = "Trust Wallet" }: WalletImportProps
           </Button>
         </div>
       </div>
-
-      {/* Help Button - Bottom Left */}
-      <button className="absolute bottom-8 left-8 flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
-        <HelpCircle className="w-5 h-5" />
-        <span className="text-sm">Help</span>
-      </button>
     </div>
   );
 };
