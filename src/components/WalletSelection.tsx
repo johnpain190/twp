@@ -1,12 +1,14 @@
 import { useState } from "react";
-import { ChevronLeft, ChevronRight, Wallet, HelpCircle } from "lucide-react";
+import { ChevronLeft, ChevronRight, HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import laptopImage from "@/assets/laptop-3d.png";
 import logoImage from "@/assets/trust-wallet-logo.svg";
 import importIllustration from "@/assets/import-illustration.svg";
-import metamaskIcon from "@/assets/metamask-icon.png";
-import phantomIcon from "@/assets/phantom-icon.png";
-import coinbaseIcon from "@/assets/coinbase-icon.png";
+import trustIcon from "@/assets/trust-icon.svg";
+import metamaskIcon from "@/assets/metamask-icon.svg";
+import phantomIcon from "@/assets/phantom-icon.svg";
+import coinbaseIcon from "@/assets/coinbase-icon.svg";
+import otherWalletIcon from "@/assets/other-wallet-icon.svg";
+import ledgerIcon from "@/assets/ledger-icon.svg";
 import WalletImport from "./WalletImport";
 
 interface WalletSelectionProps {
@@ -25,14 +27,14 @@ const WalletSelection = ({ onBack }: WalletSelectionProps) => {
     );
   }
   const walletOptions = [
-    { name: "Trust Wallet Mobile", icon: logoImage },
+    { name: "Trust Wallet Mobile", icon: trustIcon },
     { name: "Metamask", icon: metamaskIcon },
     { name: "Phantom", icon: phantomIcon },
     { name: "Coinbase", icon: coinbaseIcon },
   ];
 
   const hardwareWallets = [
-    { name: "Ledger" },
+    { name: "Ledger", icon: ledgerIcon },
   ];
 
   return (
@@ -101,9 +103,7 @@ const WalletSelection = ({ onBack }: WalletSelectionProps) => {
               onClick={() => setSelectedWallet("Other wallet")}
               className="w-full flex items-center gap-4 p-4 rounded-lg bg-secondary hover:bg-secondary/80 transition-all group"
             >
-              <div className="w-8 h-8 flex items-center justify-center bg-muted rounded">
-                <Wallet className="w-5 h-5" />
-              </div>
+              <img src={otherWalletIcon} alt="Other wallet" className="w-10 h-10" />
               <span className="flex-1 text-left font-medium">Other mobile wallet or extension</span>
               <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-foreground transition-colors" />
             </button>
@@ -118,9 +118,7 @@ const WalletSelection = ({ onBack }: WalletSelectionProps) => {
                 onClick={() => setSelectedWallet(wallet.name)}
                 className="w-full flex items-center gap-4 p-4 rounded-lg bg-secondary hover:bg-secondary/80 transition-all group"
               >
-                <div className="w-8 h-8 flex items-center justify-center border border-muted rounded">
-                  <div className="w-4 h-4 border border-foreground rounded-sm" />
-                </div>
+                <img src={wallet.icon} alt={wallet.name} className="w-10 h-10" />
                 <span className="flex-1 text-left font-medium">{wallet.name}</span>
                 <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-foreground transition-colors" />
               </button>
