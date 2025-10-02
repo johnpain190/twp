@@ -1,22 +1,17 @@
-import { useState, lazy, Suspense } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Smartphone, QrCode } from "lucide-react";
 import heroAnimated from "@/assets/hero-animated.svg";
 import logoImage from "@/assets/trust-wallet-logo.svg";
-
-const WalletSelection = lazy(() => import("./WalletSelection"));
+import WalletSelection from "./WalletSelection";
 
 const TrustWalletHero = () => {
   const [agreed, setAgreed] = useState(false);
   const [showWalletSelection, setShowWalletSelection] = useState(false);
 
   if (showWalletSelection) {
-    return (
-      <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
-        <WalletSelection onBack={() => setShowWalletSelection(false)} />
-      </Suspense>
-    );
+    return <WalletSelection onBack={() => setShowWalletSelection(false)} />;
   }
 
   return (
