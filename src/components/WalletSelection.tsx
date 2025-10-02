@@ -41,26 +41,12 @@ const WalletSelection = ({ onBack }: WalletSelectionProps) => {
         <img src={logoImage} alt="Trust Wallet" className="h-8 w-auto" />
       </div>
 
-      {/* Step indicator and Back button - Top */}
-      <div className="absolute top-8 left-1/2 -translate-x-1/2 lg:left-auto lg:translate-x-0 lg:right-8">
-        <button
-          onClick={onBack}
-          className="flex items-center gap-2 text-foreground hover:text-primary transition-colors"
-        >
-          <ChevronLeft className="w-4 h-4" />
-          <span className="text-sm">Back</span>
-        </button>
-      </div>
-
-      <div className="absolute top-8 left-8 lg:left-auto lg:right-auto text-sm text-muted-foreground">
-        Step 2 of 3
-      </div>
-
-      <div className="w-full max-w-6xl grid lg:grid-cols-2 gap-12 items-center mt-16 lg:mt-0">
+      <div className="w-full max-w-6xl grid lg:grid-cols-2 gap-12 items-start mt-16 lg:mt-0">
         {/* Left Side - Illustration */}
-        <div className="hidden lg:flex flex-col items-start justify-center">
-          <h2 className="text-3xl font-bold mb-8">Import a wallet</h2>
-          <div className="flex items-center justify-center w-full">
+        <div className="hidden lg:flex flex-col items-start justify-start space-y-6">
+          <p className="text-sm text-muted-foreground">Step 2 of 3</p>
+          <h2 className="text-3xl font-bold">Import a wallet</h2>
+          <div className="flex items-center justify-center w-full pt-8">
             <img
               src={laptopImage}
               alt="Laptop"
@@ -71,6 +57,13 @@ const WalletSelection = ({ onBack }: WalletSelectionProps) => {
 
         {/* Right Side - Wallet Options */}
         <div className="space-y-6">
+          <button
+            onClick={onBack}
+            className="flex items-center gap-2 text-foreground hover:text-primary transition-colors mb-6"
+          >
+            <ChevronLeft className="w-4 h-4" />
+            <span className="text-sm">Back</span>
+          </button>
           <h2 className="text-2xl font-bold mb-6">Select your existing wallet</h2>
 
           {/* Wallet Options List */}
