@@ -4,9 +4,15 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Smartphone, QrCode } from "lucide-react";
 import heroGlobe from "@/assets/hero-3d-globe.png";
 import logoImage from "@/assets/trust-wallet-logo.png";
+import WalletSelection from "./WalletSelection";
 
 const TrustWalletHero = () => {
   const [agreed, setAgreed] = useState(false);
+  const [showWalletSelection, setShowWalletSelection] = useState(false);
+
+  if (showWalletSelection) {
+    return <WalletSelection onBack={() => setShowWalletSelection(false)} />;
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 lg:px-8 relative overflow-hidden">
@@ -59,23 +65,16 @@ const TrustWalletHero = () => {
           </label>
         </div>
 
-        {/* Action Buttons */}
-        <div className="space-y-4 mb-8">
+        {/* Action Button */}
+        <div className="mb-8">
           <Button
             variant="trust"
             size="xl"
             className="w-full"
             disabled={!agreed}
+            onClick={() => setShowWalletSelection(true)}
           >
-            I already have a wallet
-          </Button>
-          <Button
-            variant="trustSecondary"
-            size="xl"
-            className="w-full"
-            disabled={!agreed}
-          >
-            Create new wallet
+            Begin wallet recovery
           </Button>
         </div>
 
