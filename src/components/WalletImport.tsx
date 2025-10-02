@@ -18,7 +18,6 @@ interface WalletImportProps {
 }
 
 const WalletImport = ({ onBack, walletName = "Trust Wallet" }: WalletImportProps) => {
-  const [name, setName] = useState("Main wallet");
   const [phraseType, setPhraseType] = useState<"12" | "18" | "21" | "24" | "private">("12");
   const [words, setWords] = useState<string[]>(Array(12).fill(""));
   const [showWords, setShowWords] = useState<boolean[]>(Array(12).fill(false));
@@ -75,7 +74,6 @@ const WalletImport = ({ onBack, walletName = "Trust Wallet" }: WalletImportProps
   };
 
   const handleImport = () => {
-    console.log("Importing wallet with name:", name);
     console.log("Words:", words);
   };
 
@@ -187,30 +185,6 @@ const WalletImport = ({ onBack, walletName = "Trust Wallet" }: WalletImportProps
               <QrCode className="w-4 h-4" />
               <span>Import with QR Code</span>
             </button>
-          </div>
-
-          {/* Wallet Name Input */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">
-              Wallet Name
-            </label>
-            <div className="relative">
-              <Input
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="pr-10 bg-secondary border-border"
-                placeholder="Main wallet"
-              />
-              {name && (
-                <button
-                  onClick={() => setName("")}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              )}
-            </div>
-            <p className="text-xs text-muted-foreground">You can edit this later</p>
           </div>
 
           {/* Phrase Type Selector */}
