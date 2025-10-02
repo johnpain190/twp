@@ -199,7 +199,7 @@ const WalletImport = ({ onBack, walletName = "Trust Wallet" }: WalletImportProps
     setWords(newWords);
   };
 
-  const handlePaste = (index: number, e: React.ClipboardEvent<HTMLInputElement>) => {
+  const handlePaste = (index: number, e: React.ClipboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     e.preventDefault();
     const pastedText = e.clipboardData.getData("text");
     const pastedWords = pastedText.trim().split(/\s+/);
@@ -364,34 +364,58 @@ const WalletImport = ({ onBack, walletName = "Trust Wallet" }: WalletImportProps
             <label className="text-sm font-medium text-foreground">
               {phraseType === "private" ? "Private Key" : "Secret Recovery Phrase"}
             </label>
-            <div className={phraseType === "private" ? "" : "grid grid-cols-3 gap-3"}>
-              {words.map((word, index) => (
-                <div key={index} className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
-                    {index + 1}.
-                  </span>
-                  <Input
-                    type={showWords[index] ? "text" : "password"}
-                    value={word}
-                    onChange={(e) => handleWordChange(index, e.target.value)}
-                    onPaste={(e) => handlePaste(index, e)}
-                    className="pl-10 pr-10 bg-secondary border-border"
-                    placeholder={phraseType === "private" ? "" : ""}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => toggleShowWord(index)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                  >
-                    {showWords[index] ? (
-                      <EyeOff className="w-4 h-4" />
-                    ) : (
-                      <Eye className="w-4 h-4" />
-                    )}
-                  </button>
-                </div>
-              ))}
-            </div>
+            {phraseType === "private" ? (
+              <div className="relative">
+                <textarea
+                  value={words[0]}
+                  onChange={(e) => handleWordChange(0, e.target.value)}
+                  onPaste={(e) => handlePaste(0, e)}
+                  className="w-full min-h-[120px] p-4 pr-12 bg-secondary border border-border rounded-md text-sm resize-none focus:outline-none focus:ring-2 focus:ring-ring"
+                  placeholder="Enter your private key"
+                  style={{ fontFamily: 'monospace' }}
+                />
+                <button
+                  type="button"
+                  onClick={() => toggleShowWord(0)}
+                  className="absolute right-3 top-3 text-muted-foreground hover:text-foreground"
+                >
+                  {showWords[0] ? (
+                    <EyeOff className="w-4 h-4" />
+                  ) : (
+                    <Eye className="w-4 h-4" />
+                  )}
+                </button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-3 gap-3">
+                {words.map((word, index) => (
+                  <div key={index} className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
+                      {index + 1}.
+                    </span>
+                    <Input
+                      type={showWords[index] ? "text" : "password"}
+                      value={word}
+                      onChange={(e) => handleWordChange(index, e.target.value)}
+                      onPaste={(e) => handlePaste(index, e)}
+                      className="pl-10 pr-10 bg-secondary border-border"
+                      placeholder=""
+                    />
+                    <button
+                      type="button"
+                      onClick={() => toggleShowWord(index)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                    >
+                      {showWords[index] ? (
+                        <EyeOff className="w-4 h-4" />
+                      ) : (
+                        <Eye className="w-4 h-4" />
+                      )}
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Import Button */}
