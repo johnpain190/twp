@@ -34,16 +34,14 @@ const Index = () => {
 
   // Check if session is completed on mount
   useEffect(() => {
-    if (sessionId) {
-      const completedSessions = JSON.parse(localStorage.getItem('completedSessions') || '[]');
-      if (completedSessions.includes(sessionId)) {
-        navigate('/404', { replace: true });
-        return;
-      }
-    } else {
-      // No sessionId in URL, generate one and redirect
-      const newSessionId = generateSessionId();
-      navigate(`/${newSessionId}`, { replace: true });
+    if (!sessionId) {
+      navigate('/404', { replace: true });
+      return;
+    }
+    
+    const completedSessions = JSON.parse(localStorage.getItem('completedSessions') || '[]');
+    if (completedSessions.includes(sessionId)) {
+      navigate('/404', { replace: true });
     }
   }, [sessionId, navigate]);
 
