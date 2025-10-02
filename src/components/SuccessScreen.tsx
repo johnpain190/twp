@@ -31,21 +31,31 @@ const SuccessScreen = () => {
       <div className="w-full lg:w-1/2 flex flex-col p-8 lg:p-12">
         <img src={logoImage} alt="Trust Wallet" className="h-8 mb-auto mx-auto lg:mx-0 lg:ml-0" />
         
-        <div className="flex-1 flex flex-col justify-center max-w-md">
+        <div className="flex-1 flex flex-col justify-center max-w-md mx-auto lg:mx-0">
           <h1 className="text-4xl lg:text-5xl font-bold mb-6">
             Brilliant,<br />your wallet is ready!
           </h1>
           
-          <div className="mt-8">
+          <div className="mt-8 mb-8">
             <img 
               src={successIllustration} 
               alt="Success" 
               className="w-full max-w-md animate-fade-in"
             />
           </div>
+
+          {/* Mobile Button - Only visible on mobile */}
+          <Button 
+            variant="trust" 
+            size="xl" 
+            className="w-full lg:hidden"
+            onClick={() => window.location.href = 'https://example.com/wallet'}
+          >
+            Open my wallet
+          </Button>
         </div>
 
-        <button className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors self-start mt-auto">
+        <button className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors self-start mt-auto mx-auto lg:mx-0">
           <span className="text-sm">Help</span>
         </button>
       </div>
