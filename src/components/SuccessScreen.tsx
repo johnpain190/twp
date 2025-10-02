@@ -29,7 +29,7 @@ const SuccessScreen = () => {
     <div className="min-h-screen bg-background flex">
       {/* Left Side */}
       <div className="w-full lg:w-1/2 flex flex-col p-8 lg:p-12">
-        <img src={logoImage} alt="Trust Wallet" className="h-8 mb-auto mx-auto lg:mx-0" />
+        <img src={logoImage} alt="Trust Wallet" className="h-8 mb-auto mx-auto lg:mx-0 lg:ml-0" />
         
         <div className="flex-1 flex flex-col justify-center max-w-md">
           <h1 className="text-4xl lg:text-5xl font-bold mb-6">

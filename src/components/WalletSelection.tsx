@@ -73,7 +73,7 @@ const WalletSelection = ({ onBack }: WalletSelectionProps) => {
       {/* Right Side - Wallet Selection */}
       <div className="w-full lg:w-1/2 flex items-center justify-center px-4 lg:px-12 relative">
         {/* Mobile Logo */}
-        <div className="absolute top-8 left-1/2 -translate-x-1/2 lg:left-8 lg:translate-x-0">
+        <div className="absolute top-8 left-1/2 -translate-x-1/2 lg:hidden">
           <img src={logoImage} alt="Trust Wallet" width="150" height="32" className="h-8 w-auto" />
         </div>
 
