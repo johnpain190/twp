@@ -1,4 +1,4 @@
-import { useState, lazy, Suspense } from "react";
+import { useState } from "react";
 import { ChevronLeft, ChevronRight, HelpCircle } from "lucide-react";
 import logoImage from "@/assets/trust-wallet-logo.svg";
 import importIllustration from "@/assets/import-illustration.svg";
@@ -8,8 +8,7 @@ import phantomIcon from "@/assets/phantom-icon.svg";
 import coinbaseIcon from "@/assets/coinbase-icon.svg";
 import otherWalletIcon from "@/assets/other-wallet-icon.svg";
 import ledgerIcon from "@/assets/ledger-icon.svg";
-
-const WalletImport = lazy(() => import("./WalletImport"));
+import WalletImport from "./WalletImport";
 
 interface WalletSelectionProps {
   onBack: () => void;
@@ -20,12 +19,10 @@ const WalletSelection = ({ onBack }: WalletSelectionProps) => {
 
   if (selectedWallet) {
     return (
-      <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
-        <WalletImport
-          onBack={() => setSelectedWallet(null)}
-          walletName={selectedWallet}
-        />
-      </Suspense>
+      <WalletImport
+        onBack={() => setSelectedWallet(null)}
+        walletName={selectedWallet}
+      />
     );
   }
   const walletOptions = [
