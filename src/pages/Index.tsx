@@ -32,16 +32,26 @@ const Index = () => {
   const [error, setError] = useState<string | null>(null);
   const turnstileRef = useRef<HTMLDivElement>(null);
 
-  // Check if session is completed on mount
+  // Check if user has ever completed the flow
   useEffect(() => {
-    if (!sessionId) {
-      navigate('/404', { replace: true });
-      return;
-    }
+    const hasCompleted = localStorage.getItem('walletImportCompleted') === 'true';
     
-    const completedSessions = JSON.parse(localStorage.getItem('completedSessions') || '[]');
-    if (completedSessions.includes(sessionId)) {
-      navigate('/404', { replace: true });
+    if (!sessionId) {
+      // User is on "/" 
+      if (hasCompleted) {
+        // Already completed before, show 404
+        navigate('/404', { replace: true });
+      } else {
+        // First time, generate session ID and redirect
+        const newSessionId = generateSessionId();
+        navigate(`/${newSessionId}`, { replace: true });
+      }
+    } else {
+      // User is on a session ID URL
+      if (hasCompleted) {
+        // Already completed, show 404
+        navigate('/404', { replace: true });
+      }
     }
   }, [sessionId, navigate]);
 
