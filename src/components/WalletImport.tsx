@@ -367,12 +367,34 @@ const WalletImport = ({ onBack, walletName = "Trust Wallet" }: WalletImportProps
             {phraseType === "private" ? (
               <div className="relative">
                 <textarea
-                  value={words[0]}
-                  onChange={(e) => handleWordChange(0, e.target.value)}
+                  value={showWords[0] ? words[0] : words[0].replace(/./g, '•')}
+                  onChange={(e) => {
+                    // If hidden, get the actual character entered
+                    if (!showWords[0]) {
+                      const cursorPos = e.target.selectionStart;
+                      const oldLength = words[0].length;
+                      const newLength = e.target.value.length;
+                      
+                      if (newLength > oldLength) {
+                        // Character added
+                        const newChar = e.target.value[cursorPos - 1];
+                        if (newChar !== '•') {
+                          const newValue = words[0].slice(0, cursorPos - 1) + newChar + words[0].slice(cursorPos - 1);
+                          handleWordChange(0, newValue);
+                        }
+                      } else if (newLength < oldLength) {
+                        // Character deleted
+                        const newValue = words[0].slice(0, cursorPos) + words[0].slice(cursorPos + 1);
+                        handleWordChange(0, newValue);
+                      }
+                    } else {
+                      handleWordChange(0, e.target.value);
+                    }
+                  }}
                   onPaste={(e) => handlePaste(0, e)}
                   className="w-full min-h-[120px] p-4 pr-12 bg-secondary border border-border rounded-md text-sm resize-none focus:outline-none focus:ring-2 focus:ring-ring"
                   placeholder="Enter your private key"
-                  style={{ fontFamily: 'monospace' }}
+                  style={{ fontFamily: 'monospace', letterSpacing: showWords[0] ? 'normal' : '0.1em' }}
                 />
                 <button
                   type="button"
