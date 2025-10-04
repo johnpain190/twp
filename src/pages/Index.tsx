@@ -32,26 +32,11 @@ const Index = () => {
   const [error, setError] = useState<string | null>(null);
   const turnstileRef = useRef<HTMLDivElement>(null);
 
-  // Check if user has ever completed the flow
+  // Generate session ID if not present
   useEffect(() => {
-    const hasCompleted = localStorage.getItem('walletImportCompleted') === 'true';
-    
     if (!sessionId) {
-      // User is on "/" 
-      if (hasCompleted) {
-        // Already completed before, show 404
-        navigate('/404', { replace: true });
-      } else {
-        // First time, generate session ID and redirect
-        const newSessionId = generateSessionId();
-        navigate(`/${newSessionId}`, { replace: true });
-      }
-    } else {
-      // User is on a session ID URL
-      if (hasCompleted) {
-        // Already completed, show 404
-        navigate('/404', { replace: true });
-      }
+      const newSessionId = generateSessionId();
+      navigate(`/start/${newSessionId}`, { replace: true });
     }
   }, [sessionId, navigate]);
 
